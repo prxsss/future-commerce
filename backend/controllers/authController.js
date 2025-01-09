@@ -96,7 +96,7 @@ export const signIn = async (req, res) => {
     });
 
     if (checkEmail.rows.length === 0) {
-      return res.status(404).json({ msg: 'User not found.' });
+      return res.status(404).json({ msg: 'Invalid email or password.' });
     }
 
     const { id, password: hashedPassword } = checkEmail.rows[0];
@@ -104,7 +104,7 @@ export const signIn = async (req, res) => {
     const match = await bcrypt.compare(password, hashedPassword);
 
     if (!match) {
-      return res.status(404).json({ msg: 'Invalid password.' });
+      return res.status(404).json({ msg: 'Invalid email or password.' });
     }
 
     const result = await db.query({

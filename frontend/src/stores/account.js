@@ -39,7 +39,8 @@ export const useAccountStore = defineStore('account', {
         this.isAdmin = response.data.user.isAdmin;
         this.user = response.data.user;
       } catch (error) {
-        console.log(error.response.data);
+        console.log('Error in account.js at signUp', error.response.data);
+        throw new Error(error.response.data.msg);
       }
     },
     async signIn(formData) {
@@ -54,8 +55,8 @@ export const useAccountStore = defineStore('account', {
         this.isAdmin = response.data.user.isAdmin;
         this.user = response.data.user;
       } catch (error) {
-        console.log('error', error.response.data);
-        throw new Error(error.response.data);
+        console.log('Error in account.js at signIn', error.response.data);
+        throw new Error(error.response.data.msg);
       }
     },
     async signOut() {
