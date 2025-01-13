@@ -3,15 +3,13 @@ import { onMounted } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 
 import UserLayout from '@/layouts/UserLayout.vue';
-import ArrowLeftIcon from '@/components/icons/ArrowLeftIcon.vue';
+import CartItemListings from '@/components/CartItemListings.vue';
 
 import { useUserCartStore } from '@/stores/user/cart';
-import { useUserProductStore } from '@/stores/user/product';
 import { useAccountStore } from '@/stores/account';
 
 const router = useRouter();
 const userCartStore = useUserCartStore();
-const userProductStore = useUserProductStore();
 const accountStore = useAccountStore();
 
 const shippingOptions = [
@@ -54,44 +52,7 @@ onMounted(() => {
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in userCartStore.items">
-                  <th>
-                    <div class="flex gap-4">
-                      <img
-                        class="h-[100px] w-[100px] object-cover"
-                        :src="item.imgUrlSmall"
-                        :alt="item.name"
-                      />
-                      <div class="font-normal">
-                        <div class="text-sm">{{ item.name }}</div>
-                        <button
-                          @click="userCartStore.removeItemInCart(index)"
-                          class="text-xs text-gray-400"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  </th>
-                  <td>
-                    <select
-                      v-model="item.cartItemQuantity"
-                      @change="
-                        userCartStore.updateItemInCart(
-                          index,
-                          $event.target.value
-                        )
-                      "
-                      class="select select-bordered w-full"
-                    >
-                      <option v-for="quantity in item.productQuantity">
-                        {{ quantity }}
-                      </option>
-                    </select>
-                  </td>
-                  <td>&#3647;{{ item.price }}</td>
-                  <td>&#3647;{{ item.cartItemQuantity * item.price }}</td>
-                </tr>
+                <CartItemListings :items="userCartStore.items" />
               </tbody>
             </table>
           </div>

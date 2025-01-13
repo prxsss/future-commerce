@@ -67,7 +67,9 @@ export const getCartByUserId = async (req, res) => {
               PUBLIC."cartItems"
             INNER JOIN products ON "cartItems"."productId" = products.id
             WHERE
-              "cartId" = $1;
+              "cartId" = $1
+            ORDER BY
+              "cartItems"."createdAt" DESC;
             `,
       values: [cartId],
     });
