@@ -93,7 +93,7 @@ const signOut = async () => {
               <span class="text-lg font-bold"
                 >{{ userCartStore.totalQuantity }} Items</span
               >
-              <span class="text-info"
+              <span class="text-base"
                 >Subtotal: {{ userCartStore.totalPrice }}</span
               >
               <div class="card-actions">
