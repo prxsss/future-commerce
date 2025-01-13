@@ -38,7 +38,7 @@ onMounted(() => {
                   <img
                     :src="accoutStore.user.imgUrl"
                     alt=""
-                    class="h-[50px] w-[50px] rounded-full"
+                    class="skeleton h-[50px] w-[50px] rounded-full"
                   />
                   <div>
                     <span class="font-semibold">{{

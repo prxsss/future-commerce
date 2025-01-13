@@ -205,7 +205,7 @@ const handleSave = async (event) => {
             <div class="flex flex-col items-center">
               <div class="my-[1.25rem]">
                 <img
-                  class="h-[100px] w-[100px] rounded-full object-cover"
+                  class="skeleton h-[100px] w-[100px] rounded-full object-cover"
                   :src="imagePreview"
                   alt=""
                 />

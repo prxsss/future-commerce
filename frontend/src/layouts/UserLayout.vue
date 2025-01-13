@@ -112,11 +112,8 @@ const signOut = async () => {
             role="button"
             class="avatar btn btn-circle btn-ghost"
           >
-            <div class="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                :src="accountStore.user.imgUrl"
-              />
+            <div class="skeleton w-10 rounded-full">
+              <img alt="" :src="accountStore.user.imgUrl" />
             </div>
           </div>
           <ul
