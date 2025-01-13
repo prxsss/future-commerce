@@ -51,14 +51,16 @@ export const signUp = async (req, res) => {
 
     console.log('hashedPassword', hashedPassword);
 
+    const imgUrl = `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`;
+
     const result = await db.query({
       text: `
-          INSERT INTO public.users("firstName", "lastName", email, password)
-          VALUES ($1, $2, $3, $4)
+          INSERT INTO public.users("imgUrl", "firstName", "lastName", email, password)
+          VALUES ($1, $2, $3, $4, $5)
           ON CONFLICT DO NOTHING
           RETURNING id, "imgUrl", "firstName", "lastName", email, "isAdmin";
           `,
-      values: [firstName, lastName, email, hashedPassword],
+      values: [imgUrl, firstName, lastName, email, hashedPassword],
     });
 
     if (result.rows.length === 0) {
