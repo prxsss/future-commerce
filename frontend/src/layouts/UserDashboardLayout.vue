@@ -61,7 +61,7 @@ onMounted(() => {
                     <RouterLink
                       :to="{ name: 'user-profile' }"
                       class="flex items-center"
-                      :class="{ 'text-navy-500': routeName === 'user-profile' }"
+                      :class="{ underline: routeName === 'user-profile' }"
                     >
                       <!-- <UserIcon class="h-[12px] w-[12px]" /> -->
                       <i class="pi pi-user"></i>
@@ -73,7 +73,7 @@ onMounted(() => {
                       :to="{ name: 'purchase-history' }"
                       class="flex items-center"
                       :class="{
-                        'text-navy-500': routeName === 'purchase-history',
+                        underline: routeName === 'purchase-history',
                       }"
                     >
                       <!-- <ReceiptIcon class="h-[12px] w-[12px]" /> -->

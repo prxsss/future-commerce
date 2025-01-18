@@ -126,7 +126,6 @@ const signOut = async () => {
                 class="justify-between"
               >
                 Profile
-                <span class="badge">New</span>
               </RouterLink>
             </li>
             <li>
