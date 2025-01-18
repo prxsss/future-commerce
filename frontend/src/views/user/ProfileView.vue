@@ -152,6 +152,7 @@ const handleSave = async (event) => {
                             placeholder=""
                             :value="accountStore.user.email"
                             class="input input-bordered w-full"
+                            disabled
                           />
                         </label>
                       </div>
