@@ -2,8 +2,6 @@
 import { RouterLink } from 'vue-router';
 
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import PenToSquareIcon from '@/components/icons/PenToSquareIcon.vue';
-import TrashIcon from '@/components/icons/TrashIcon.vue';
 
 import { useProductStore } from '@/stores/admin/product';
 
@@ -23,10 +21,14 @@ const deleteProduct = async (id) => {
   <AdminLayout>
     <div class="p-14">
       <div class="flex items-center justify-between">
-        <div class="text-2xl font-semibold">Product</div>
-        <RouterLink :to="{ name: 'admin-products-add' }" class="btn btn-primary"
-          >Add New</RouterLink
+        <div class="text-2xl font-semibold">Product Management</div>
+        <RouterLink
+          :to="{ name: 'admin-products-add' }"
+          class="btn btn-primary text-base"
         >
+          <i class="pi pi-plus" style="font-size: 1rem; font-weight: bold"></i>
+          Add New Product
+        </RouterLink>
       </div>
       <div class="divider"></div>
       <div class="overflow-x-auto">
@@ -37,10 +39,10 @@ const deleteProduct = async (id) => {
               <th>Name</th>
               <th>Image</th>
               <th>Price</th>
-              <th>Quantity</th>
-              <th>Updated At</th>
-              <th></th>
-              <th></th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Last Updated</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -58,29 +60,31 @@ const deleteProduct = async (id) => {
               </td>
               <td>{{ item.price }}</td>
               <td>{{ item.quantity }}</td>
+              <td>
+                <div class="badge badge-success gap-2">In Stock</div>
+              </td>
               <td>{{ new Date(item.updatedAt).toLocaleString() }}</td>
               <td>
-                <div class="flex items-center">
-                  <RouterLink
-                    :to="{
-                      name: 'admin-products-update',
-                      params: { id: item.id },
-                    }"
-                  >
-                    <!-- <PenToSquareIcon class="h-[20px] w-[20px]" /> -->
-                    <i
-                      class="pi pi-pen-to-square"
-                      style="font-size: 1.25rem"
-                    ></i>
-                  </RouterLink>
-                </div>
-              </td>
-              <td>
-                <div class="flex items-center">
-                  <button @click="deleteProduct(item.id)">
-                    <!-- <TrashIcon class="h-[20px] w-[20px]" /> -->
-                    <i class="pi pi-trash" style="font-size: 1.25rem"></i>
-                  </button>
+                <div class="flex items-center gap-4">
+                  <div class="flex items-center">
+                    <RouterLink
+                      :to="{
+                        name: 'admin-products-update',
+                        params: { id: item.id },
+                      }"
+                      class="text-primary"
+                    >
+                      <i
+                        class="pi pi-pen-to-square"
+                        style="font-size: 1.25rem"
+                      ></i>
+                    </RouterLink>
+                  </div>
+                  <div class="flex items-center">
+                    <button @click="deleteProduct(item.id)" class="text-error">
+                      <i class="pi pi-trash" style="font-size: 1.25rem"></i>
+                    </button>
+                  </div>
                 </div>
               </td>
             </tr>
