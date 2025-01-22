@@ -9,8 +9,10 @@ const productStore = useProductStore();
 
 const deleteProduct = async (id) => {
   try {
-    await productStore.deleteProduct(id);
-    await productStore.loadProducts();
+    if (confirm('Are you sure you want to delete this product?')) {
+      await productStore.deleteProduct(id);
+      await productStore.loadProducts();
+    }
   } catch (error) {
     console.log(error.response.data);
   }
