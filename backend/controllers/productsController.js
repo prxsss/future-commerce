@@ -3,7 +3,30 @@ import db from '../services/database.js';
 export const getProducts = async (req, res) => {
   try {
     const result = await db.query(
-      `SELECT * FROM products ORDER BY "updatedAt" DESC;`
+      `
+        SELECT 
+          products.id, 
+          products.name, 
+          products.description, 
+          price, quantity, 
+          "categoryId", 
+          categories.name AS "categoryName", 
+          "createdAt", 
+          "updatedAt", 
+          "imgUrlLarge", 
+          "imgUrlSmall", 
+          "currentStock", 
+          "minimumStockLevel", 
+          "maximumStockLevel", 
+          "regularPrice", 
+          "salePrice"
+        FROM 
+          products
+        INNER JOIN 
+          categories ON products."categoryId" = categories.id
+        ORDER BY 
+          "updatedAt" DESC;
+      `
     );
 
     if (result.rows.length === 0) {
@@ -112,6 +135,8 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
+    console.log('deleteProduct');
+
     const { id } = req.params;
     const parsedId = parseInt(id);
 

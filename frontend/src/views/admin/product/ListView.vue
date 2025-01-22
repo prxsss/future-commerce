@@ -25,7 +25,7 @@ const deleteProduct = async (id) => {
       <div class="flex items-center justify-between">
         <div class="text-2xl font-semibold">Product Management</div>
         <RouterLink
-          :to="{ name: 'admin-products-add' }"
+          :to="{ name: 'admin-products-add', query: { tab: 'basic' } }"
           class="btn btn-primary text-base"
         >
           <i class="pi pi-plus" style="font-size: 1rem; font-weight: bold"></i>
@@ -38,9 +38,10 @@ const deleteProduct = async (id) => {
           <!-- head -->
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Image</th>
-              <th>Price</th>
+              <th>Product Name</th>
+              <!-- <th>Image</th> -->
+              <th>Category</th>
+              <th>Sale Price</th>
               <th>Stock</th>
               <th>Status</th>
               <th>Last Updated</th>
@@ -51,7 +52,7 @@ const deleteProduct = async (id) => {
             <!-- row 1 -->
             <tr v-for="item in productStore.items">
               <th>{{ item.name }}</th>
-              <td>
+              <!-- <td>
                 <div>
                   <img
                     class="h-[80px] w-[80px] rounded object-cover"
@@ -59,9 +60,10 @@ const deleteProduct = async (id) => {
                     alt=""
                   />
                 </div>
-              </td>
-              <td>{{ item.price }}</td>
-              <td>{{ item.quantity }}</td>
+              </td> -->
+              <td>{{ item.categoryName }}</td>
+              <td>{{ item.salePrice }}</td>
+              <td>{{ item.currentStock }}</td>
               <td>
                 <div class="badge badge-success gap-2">In Stock</div>
               </td>
@@ -73,6 +75,7 @@ const deleteProduct = async (id) => {
                       :to="{
                         name: 'admin-products-update',
                         params: { id: item.id },
+                        query: { tab: 'basic' },
                       }"
                       class="text-primary"
                     >
