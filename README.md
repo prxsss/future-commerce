@@ -15,39 +15,45 @@ This is a simple e-commerce website that I created to practice frontend, backend
 
 ## Manual
 
-### Homepage
+### User
+
+#### Homepage
 
 <p align="center"><img src="frontend/public/images/gif/Homepage.gif" width="650" height="350"></p>
 
 <hr />
 
-### Sign in and Sign up Page
+#### Sign in and Sign up Page
 
 <p align="center"><img src="frontend/public/images/gif/signup.gif" width="650" height="350"></p>
 
 <hr />
 
-### Cart and Checkout Page
+#### Cart and Checkout Page
 
 <p align="center"><img src="frontend/public/images/gif/cart.gif" width="650" height="350"></p>
 
 <hr />
 
-### User Profile Page
+#### User Profile Page
 
 <p align="center"><img src="frontend/public/images/gif/profile.gif" width="650" height="350"></p>
 
 <hr />
 
-### Purchase History Page
+#### Purchase History Page
 
 <p align="center"><img src="frontend/public/images/gif/purchase-history.gif" width="650" height="350"></p>
 
 <hr />
 
-### Logout
+#### Logout
 
 <p align="center"><img src="frontend/public/images/gif/logout.gif" width="650" height="350"></p>
+
+### Admin
+
+#### Product Management
 
 ## Tech Stack
 
