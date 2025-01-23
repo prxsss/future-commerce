@@ -16,9 +16,13 @@ export const useProductStore = defineStore('product', {
     getProductById(id) {
       return this.items.find((item) => item.id === id);
     },
-    async addProduct(product) {
+    async addProduct(productData) {
       try {
-        const response = await axios.post('/api/products', product);
+        const response = await axios.post('/api/products', productData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         console.log(response.data);
       } catch (error) {
         console.log(error.response.data);

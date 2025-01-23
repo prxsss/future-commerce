@@ -18,12 +18,18 @@ const currentTab = ref('');
 const productId = ref(-1);
 let formData = reactive({});
 
-const fileInputForLargeImage = ref(null);
-const fileInputForSmallImage = ref(null);
-const largeImagePreview = ref('');
-const smallImagePreview = ref('');
-const selectedLargeImageFile = ref(null);
-const selectedSmallImageFile = ref(null);
+const fileInput = ref(null);
+const imgPreview = ref('');
+const selectedImgFile = ref(null);
+
+const productCategories = [
+  { id: 1, name: 'Electronics' },
+  { id: 2, name: 'Audio' },
+  { id: 3, name: 'Gaming' },
+  { id: 4, name: 'TV' },
+  { id: 5, name: 'Camera' },
+  { id: 6, name: 'Drone' },
+];
 
 const mode = computed(() => {
   return productId.value !== -1 ? 'Edit' : 'Add';
@@ -34,38 +40,67 @@ const updateTab = (tab) => {
   router.push({ query: { tab } });
 };
 
-const triggerFileInputForLargeImage = () => {
-  fileInputForLargeImage.value.click();
+const triggerFileInput = () => {
+  fileInput.value.click();
 };
 
-const triggerFileInputForSmallImage = () => {
-  fileInputForSmallImage.value.click();
-};
-
-const onLargeImageFileSelected = (event) => {
+const onFileSelected = (event) => {
   const file = event.target.files[0];
 
   if (file) {
-    selectedLargeImageFile.value = file;
-    largeImagePreview.value = URL.createObjectURL(file);
+    selectedImgFile.value = file;
+    imgPreview.value = URL.createObjectURL(file);
   }
 };
 
-const onSmallImageFileSelected = (event) => {
-  const file = event.target.files[0];
+const deleteProduct = async () => {
+  try {
+    if (confirm('Are you sure you want to delete this product?')) {
+      await productStore.deleteProduct(productId.value);
+      await productStore.loadProducts();
+    }
+  } catch (error) {
+    console.log(error.response.data);
+  }
+};
 
-  if (file) {
-    selectedSmallImageFile.value = file;
-    smallImagePreview.value = URL.createObjectURL(file);
+const handleRemoveImage = () => {
+  if (confirm('Are you sure you want to remove this image?')) {
+    selectedImgFile.value = null;
+    imgPreview.value = '';
   }
 };
 
 const handleSubmit = async () => {
+  if (
+    !formData.name ||
+    !formData.description ||
+    !formData.categoryId ||
+    !formData.regularPrice ||
+    !formData.salePrice ||
+    !formData.currentStock ||
+    !formData.minimumStockLevel ||
+    !formData.maximumStockLevel ||
+    !selectedImgFile.value
+  ) {
+    alert('Please ensure all fields are filled.');
+    return;
+  }
+
+  const submitData = new FormData();
+
+  for (const key in formData) {
+    submitData.append(key, formData[key]);
+  }
+  submitData.append('image', selectedImgFile.value);
+
+  console.log(submitData);
+
   try {
     if (mode.value === 'Add') {
-      await productStore.addProduct(formData);
+      await productStore.addProduct(submitData);
     } else {
-      await productStore.updateProduct(productId.value, formData);
+      await productStore.updateProduct(productId.value, submitData);
     }
     await productStore.loadProducts();
     toast.success('Product ' + mode.value + 'ed Successfully.');
@@ -80,8 +115,7 @@ onMounted(() => {
     productId.value = parseInt(route.params.id);
     formData = productStore.getProductById(productId.value);
 
-    largeImagePreview.value = formData.imgUrlLarge || '';
-    smallImagePreview.value = formData.imgUrlSmall || '';
+    imgPreview.value = formData.imgUrlLarge || '';
   }
 
   currentTab.value = route.query.tab;
@@ -90,25 +124,23 @@ onMounted(() => {
 
 <template>
   <AdminLayout>
-    <div class="flex h-full flex-col p-14">
+    <form @submit.prevent="handleSubmit" class="flex h-full flex-col p-14">
       <div>
         <div class="flex items-center justify-between">
           <div class="text-2xl font-semibold">{{ mode }} Product</div>
           <div class="flex gap-4">
-            <RouterLink
-              :to="{ name: 'admin-products-list' }"
+            <button
+              v-if="mode === 'Edit'"
+              @click="deleteProduct"
               class="btn flex items-center px-6 text-base"
             >
               <i
                 class="pi pi-trash text-error"
                 style="font-size: 1.25rem; font-weight: bold"
               ></i>
-              Delete</RouterLink
-            >
-            <button
-              @click="handleSubmit()"
-              class="btn btn-primary px-6 text-base"
-            >
+              Delete
+            </button>
+            <button type="submit" class="btn btn-primary px-6 text-base">
               <i
                 class="pi pi-save"
                 style="font-size: 1rem; font-weight: bold"
@@ -123,6 +155,7 @@ onMounted(() => {
               @click="updateTab(tab)"
               v-for="(tab, index) in tabs"
               :key="index"
+              type="button"
               role="tab"
               :class="{
                 tab: true,
@@ -150,6 +183,7 @@ onMounted(() => {
               type="text"
               placeholder=""
               class="input input-bordered w-full"
+              required
             />
           </label>
         </div>
@@ -162,6 +196,7 @@ onMounted(() => {
               v-model="formData.description"
               class="textarea textarea-bordered h-24"
               placeholder=""
+              required
             ></textarea>
           </label>
         </div>
@@ -172,15 +207,17 @@ onMounted(() => {
               <span class="label-text">Category</span>
             </div>
             <select
-              v-model="formData.categoryName"
+              v-model="formData.categoryId"
               class="select select-bordered"
+              required
             >
-              <option>Electronics</option>
-              <option>Audio</option>
-              <option>Gaming</option>
-              <option>TV</option>
-              <option>Camera</option>
-              <option>Drone</option>
+              <option
+                v-for="category in productCategories"
+                :key="category.id"
+                :value="category.id"
+              >
+                {{ category.name }}
+              </option>
             </select>
           </label>
         </div>
@@ -200,6 +237,7 @@ onMounted(() => {
               type="number"
               placeholder=""
               class="input input-bordered w-full"
+              required
             />
           </label>
           <label class="form-control w-full flex-auto">
@@ -211,6 +249,7 @@ onMounted(() => {
               type="number"
               placeholder=""
               class="input input-bordered w-full"
+              required
             />
           </label>
         </div>
@@ -230,6 +269,7 @@ onMounted(() => {
               type="number"
               placeholder=""
               class="input input-bordered w-full"
+              required
             />
           </label>
         </div>
@@ -243,6 +283,7 @@ onMounted(() => {
               type="number"
               placeholder=""
               class="input input-bordered w-full"
+              required
             />
           </label>
           <label class="form-control w-full">
@@ -254,6 +295,7 @@ onMounted(() => {
               type="number"
               placeholder=""
               class="input input-bordered w-full"
+              required
             />
           </label>
         </div>
@@ -266,15 +308,16 @@ onMounted(() => {
         <div class="mb-8">
           <h4 class="mb-4 font-semibold">Product Card Image</h4>
           <input
-            @change="onLargeImageFileSelected($event)"
-            ref="fileInputForLargeImage"
+            @change="onFileSelected($event)"
+            ref="fileInput"
             type="file"
             class="hidden"
           />
           <button
-            v-if="largeImagePreview == ''"
-            @click="triggerFileInputForLargeImage()"
+            v-if="imgPreview == ''"
+            @click="triggerFileInput()"
             class="flex aspect-[1792/1024] w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300"
+            type="button"
           >
             <i class="pi pi-image mb-4 text-3xl"></i>
             <span class="mb-1">Upload Product Card Image</span>
@@ -282,19 +325,20 @@ onMounted(() => {
           </button>
           <div v-else class="group relative">
             <img
-              :src="largeImagePreview"
+              :src="imgPreview"
               alt=""
               class="aspect-[1792/1024] w-full rounded-lg object-cover"
             />
             <button
-              @click="largeImagePreview = ''"
+              @click="handleRemoveImage"
               class="btn btn-circle btn-error absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100"
+              type="button"
             >
               <i class="pi pi-trash text-base-100"></i>
             </button>
           </div>
         </div>
-        <div>
+        <!-- <div>
           <h4 class="mb-4 font-semibold">Shopping Cart Thumbnail</h4>
           <input
             @change="onSmallImageFileSelected($event)"
@@ -308,6 +352,7 @@ onMounted(() => {
             :class="[
               'flex aspect-[320/320] w-full flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300',
             ]"
+            type="button"
           >
             <i class="pi pi-image mb-4 text-3xl"></i>
             <span class="mb-1">Upload Shopping Cart Thumbnail</span>
@@ -322,14 +367,15 @@ onMounted(() => {
             <button
               @click="smallImagePreview = ''"
               class="btn btn-circle btn-error absolute right-4 top-4 opacity-0 transition-opacity group-hover:opacity-100"
+              type="button"
             >
               <i class="pi pi-trash text-base-100"></i>
             </button>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Tab 4: Images -->
-    </div>
+    </form>
   </AdminLayout>
 </template>
