@@ -28,11 +28,15 @@ export const useProductStore = defineStore('product', {
         console.log(error.response.data);
       }
     },
-    async updateProduct(id, product) {
+    async updateProduct(id, productData) {
       console.log('id', id);
-      console.log('product', product);
+      console.log('product', productData);
       try {
-        const response = await axios.patch(`/api/products/${id}`, product);
+        const response = await axios.patch(`/api/products/${id}`, productData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         console.log(response.data);
       } catch (error) {
         console.log(error.response.data);

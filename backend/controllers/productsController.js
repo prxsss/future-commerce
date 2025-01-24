@@ -3,6 +3,8 @@ import multer from 'multer';
 import path from 'path';
 import __dirname from '../index.js';
 import sharp from 'sharp';
+import deleteFile from '../utils/deleteFile.js';
+import convertToKebabCase from '../utils/convertToKebabCase.js';
 
 // Configure Multer to store images in memory
 const upload = multer({
@@ -111,11 +113,11 @@ export const addProduct = async (req, res) => {
 
           const largeImgPath = path.join(
             largeImgUploadDir,
-            req.file.originalname
+            convertToKebabCase(req.file.originalname)
           );
           const smallImgPath = path.join(
             smallImgUploadDir,
-            req.file.originalname
+            convertToKebabCase(req.file.originalname)
           );
 
           await Promise.all([
@@ -207,37 +209,136 @@ export const addProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const parsedId = parseInt(id);
-    const {
-      name,
-      description,
-      price,
-      quantity,
-      categoryId,
-      imgUrlLarge,
-      imgUrlSmall,
-    } = req.body;
+    upload.single('image')(req, res, async (err) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ msg: 'Internal server error.' });
+      } else {
+        if (req.file) {
+          // console.log('req.file', req.file);
 
-    const result = await db.query({
-      text: `
-            UPDATE public.products
-            SET name=$2, description=$3, price=$4, quantity=$5, "categoryId"=$6, "imgUrlLarge"=$7, "imgUrlSmall"=$8
-            WHERE id=$1;
-            `,
-      values: [
-        parsedId,
-        name,
-        description,
-        price,
-        quantity,
-        categoryId,
-        imgUrlLarge,
-        imgUrlSmall,
-      ],
+          const filesUploadDir = path.join(__dirname, 'public');
+
+          console.log('imgUrlLarge', req.body.imgUrlLarge);
+
+          const oldImgUrlLarge = req.body.imgUrlLarge.replace(
+            /^http:\/\/localhost:3000\/static/,
+            'C:/Users/prosss/Desktop/Dev-CTRs/development/future-commerce/backend/public'
+          );
+          const oldImgUrlSmall = req.body.imgUrlSmall.replace(
+            /^http:\/\/localhost:3000\/static/,
+            'C:/Users/prosss/Desktop/Dev-CTRs/development/future-commerce/backend/public'
+          );
+
+          console.log(oldImgUrlLarge);
+          console.log(oldImgUrlSmall);
+
+          await Promise.all([
+            deleteFile(oldImgUrlLarge),
+            deleteFile(oldImgUrlSmall),
+          ]);
+
+          const largeImgUploadDir = path.join(
+            __dirname,
+            'public',
+            'img',
+            'products',
+            'large'
+          );
+          const smallImgUploadDir = path.join(
+            __dirname,
+            'public',
+            'img',
+            'products',
+            'small'
+          );
+
+          const largeImgPath = path.join(
+            largeImgUploadDir,
+            convertToKebabCase(req.file.originalname)
+          );
+          const smallImgPath = path.join(
+            smallImgUploadDir,
+            convertToKebabCase(req.file.originalname)
+          );
+
+          await Promise.all([
+            sharp(req.file.buffer).jpeg().toFile(largeImgPath),
+            sharp(req.file.buffer).resize(350, 350).jpeg().toFile(smallImgPath),
+          ]);
+
+          // console.log(__dirname);
+          // console.log(largeImgUploadDir);
+          // console.log(smallImgUploadDir);
+          // console.log(req.file.originalname);
+          // console.log(largeImgPath);
+
+          const largeImgFilePath = largeImgPath
+            .replace(/\\/g, '/')
+            .replace(
+              /^C:\/Users\/prosss\/Desktop\/Dev-CTRs\/development\/future-commerce\/backend\/public/,
+              'http://localhost:3000/static'
+            );
+          const smallImgFilePath = smallImgPath
+            .replace(/\\/g, '/')
+            .replace(
+              /^C:\/Users\/prosss\/Desktop\/Dev-CTRs\/development\/future-commerce\/backend\/public/,
+              'http://localhost:3000/static'
+            );
+
+          req.body.imgUrlLarge = largeImgFilePath;
+          req.body.imgUrlSmall = smallImgFilePath;
+        }
+
+        const { id } = req.params;
+        const parsedId = parseInt(id);
+        const {
+          name,
+          description,
+          categoryId,
+          regularPrice,
+          salePrice,
+          currentStock,
+          minimumStockLevel,
+          maximumStockLevel,
+          imgUrlLarge,
+          imgUrlSmall,
+        } = req.body;
+        const result = await db.query({
+          text: `
+                UPDATE
+                  products
+                SET
+                  name=$2,
+                  description=$3,
+                  "categoryId"=$4,
+                  "regularPrice"=$5,
+                  "salePrice"=$6,
+                  "currentStock"=$7,
+                  "minimumStockLevel"=$8,
+                  "maximumStockLevel"=$9,
+                  "imgUrlLarge"=$10,
+                  "imgUrlSmall"=$11
+                WHERE
+                  id=$1;
+                `,
+          values: [
+            parsedId,
+            name,
+            description,
+            categoryId,
+            regularPrice,
+            salePrice,
+            currentStock,
+            minimumStockLevel,
+            maximumStockLevel,
+            imgUrlLarge,
+            imgUrlSmall,
+          ],
+        });
+        res.status(200).json({ msg: 'Product updated successfully.' });
+      }
     });
-
-    res.status(200).json({ msg: 'Product updated successfully.' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: 'Internal server error.' });

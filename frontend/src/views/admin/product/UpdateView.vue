@@ -81,7 +81,7 @@ const handleSubmit = async () => {
     !formData.currentStock ||
     !formData.minimumStockLevel ||
     !formData.maximumStockLevel ||
-    !selectedImgFile.value
+    imgPreview.value === ''
   ) {
     alert('Please ensure all fields are filled.');
     return;
@@ -92,6 +92,7 @@ const handleSubmit = async () => {
   for (const key in formData) {
     submitData.append(key, formData[key]);
   }
+
   submitData.append('image', selectedImgFile.value);
 
   console.log(submitData);
@@ -115,7 +116,7 @@ onMounted(() => {
     productId.value = parseInt(route.params.id);
     formData = productStore.getProductById(productId.value);
 
-    imgPreview.value = formData.imgUrlLarge || '';
+    imgPreview.value = formData.imgUrlLarge;
   }
 
   currentTab.value = route.query.tab;
@@ -133,6 +134,7 @@ onMounted(() => {
               v-if="mode === 'Edit'"
               @click="deleteProduct"
               class="btn flex items-center px-6 text-base"
+              type="button"
             >
               <i
                 class="pi pi-trash text-error"
