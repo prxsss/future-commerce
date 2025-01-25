@@ -53,7 +53,13 @@ This is a simple e-commerce website that I created to practice frontend, backend
 
 ### Admin
 
-#### Product Management
+#### Dashboard Page
+
+#### Product Management Page
+
+#### Order Management Page
+
+#### User Management Page
 
 ## Tech Stack
 
