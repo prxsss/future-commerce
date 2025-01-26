@@ -26,7 +26,8 @@ export const getProducts = async (req, res) => {
           products.id, 
           products.name, 
           products.description, 
-          price, quantity, 
+          price, 
+          quantity, 
           "categoryId", 
           categories.name AS "categoryName", 
           "createdAt", 
@@ -36,9 +37,7 @@ export const getProducts = async (req, res) => {
           "currentStock", 
           "minimumStockLevel", 
           "maximumStockLevel", 
-          status,
-          "regularPrice", 
-          "salePrice"
+          status
         FROM 
           products
         INNER JOIN 
@@ -155,8 +154,7 @@ export const addProduct = async (req, res) => {
           name,
           description,
           categoryId,
-          regularPrice,
-          salePrice,
+          price,
           currentStock,
           minimumStockLevel,
           maximumStockLevel,
@@ -171,8 +169,7 @@ export const addProduct = async (req, res) => {
                     name,
                     description,
                     "categoryId",
-                    "regularPrice",
-                    "salePrice",
+                    price,
                     "currentStock",
                     "minimumStockLevel",
                     "maximumStockLevel",
@@ -180,7 +177,7 @@ export const addProduct = async (req, res) => {
                     "imgUrlSmall"
                   )
                 VALUES
-                  ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+                  ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 RETURNING
                   *;
                 `,
@@ -188,8 +185,7 @@ export const addProduct = async (req, res) => {
             name,
             description,
             categoryId,
-            regularPrice,
-            salePrice,
+            price,
             currentStock,
             minimumStockLevel,
             maximumStockLevel,
@@ -297,8 +293,7 @@ export const updateProduct = async (req, res) => {
           name,
           description,
           categoryId,
-          regularPrice,
-          salePrice,
+          price,
           currentStock,
           minimumStockLevel,
           maximumStockLevel,
@@ -313,13 +308,12 @@ export const updateProduct = async (req, res) => {
                   name=$2,
                   description=$3,
                   "categoryId"=$4,
-                  "regularPrice"=$5,
-                  "salePrice"=$6,
-                  "currentStock"=$7,
-                  "minimumStockLevel"=$8,
-                  "maximumStockLevel"=$9,
-                  "imgUrlLarge"=$10,
-                  "imgUrlSmall"=$11
+                  "price"=$5,
+                  "currentStock"=$6,
+                  "minimumStockLevel"=$7,
+                  "maximumStockLevel"=$8,
+                  "imgUrlLarge"=$9,
+                  "imgUrlSmall"=$10
                 WHERE
                   id=$1;
                 `,
@@ -328,8 +322,7 @@ export const updateProduct = async (req, res) => {
             name,
             description,
             categoryId,
-            regularPrice,
-            salePrice,
+            price,
             currentStock,
             minimumStockLevel,
             maximumStockLevel,

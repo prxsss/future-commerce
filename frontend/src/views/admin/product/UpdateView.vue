@@ -76,8 +76,7 @@ const handleSubmit = async () => {
     !formData.name ||
     !formData.description ||
     !formData.categoryId ||
-    !formData.regularPrice ||
-    !formData.salePrice ||
+    !formData.price ||
     !formData.currentStock ||
     !formData.minimumStockLevel ||
     !formData.maximumStockLevel ||
@@ -232,17 +231,17 @@ onMounted(() => {
         <div class="flex items-center gap-8">
           <label class="form-control w-full flex-auto">
             <div class="label">
-              <span class="label-text">Regular Price (&#3647;)</span>
+              <span class="label-text">Price (&#3647;)</span>
             </div>
             <input
-              v-model="formData.regularPrice"
+              v-model="formData.price"
               type="number"
               placeholder=""
               class="input input-bordered w-full"
               required
             />
           </label>
-          <label class="form-control w-full flex-auto">
+          <!-- <label class="form-control w-full flex-auto">
             <div class="label">
               <span class="label-text">Sale Price (&#3647;)</span>
             </div>
@@ -253,7 +252,7 @@ onMounted(() => {
               class="input input-bordered w-full"
               required
             />
-          </label>
+          </label> -->
         </div>
       </div>
       <!-- Tab 2: Pricing -->

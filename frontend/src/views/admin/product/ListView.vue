@@ -41,7 +41,7 @@ const deleteProduct = async (id) => {
               <th>Product Name</th>
               <!-- <th>Image</th> -->
               <th>Category</th>
-              <th>Sale Price</th>
+              <th>Price</th>
               <th>Stock</th>
               <th>Status</th>
               <th>Last Updated</th>
@@ -62,7 +62,7 @@ const deleteProduct = async (id) => {
                 </div>
               </td> -->
               <td>{{ item.categoryName }}</td>
-              <td>{{ item.salePrice }}</td>
+              <td>{{ item.price }}</td>
               <td>{{ item.currentStock }}</td>
               <td>
                 <div
