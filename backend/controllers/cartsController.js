@@ -278,6 +278,14 @@ export const checkout = async (req, res) => {
               RETURNING *;`,
         values: [orderId, productId, quantity],
       });
+
+      await db.query({
+        text: `UPDATE products
+              SET "currentStock" = "currentStock" - $1
+              WHERE id = $2;`,
+        values: [quantity, productId],
+      });
+
       console.log(result.rows[0]);
     });
 
