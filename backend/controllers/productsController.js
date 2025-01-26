@@ -36,6 +36,7 @@ export const getProducts = async (req, res) => {
           "currentStock", 
           "minimumStockLevel", 
           "maximumStockLevel", 
+          status,
           "regularPrice", 
           "salePrice"
         FROM 

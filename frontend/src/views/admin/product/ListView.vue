@@ -65,7 +65,18 @@ const deleteProduct = async (id) => {
               <td>{{ item.salePrice }}</td>
               <td>{{ item.currentStock }}</td>
               <td>
-                <div class="badge badge-success gap-2">In Stock</div>
+                <div
+                  :class="[
+                    'badge gap-2 capitalize',
+                    {
+                      'badge-success': item.status === 'in stock',
+                      'badge-error': item.status === 'out of stock',
+                      'badge-warning': item.status === 'low stock',
+                    },
+                  ]"
+                >
+                  {{ item.status }}
+                </div>
               </td>
               <td>{{ new Date(item.updatedAt).toLocaleString() }}</td>
               <td>
