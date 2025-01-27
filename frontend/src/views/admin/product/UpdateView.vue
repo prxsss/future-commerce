@@ -77,9 +77,12 @@ const handleSubmit = async () => {
     !formData.description ||
     !formData.categoryId ||
     !formData.price ||
-    !formData.currentStock ||
-    !formData.minimumStockLevel ||
-    !formData.maximumStockLevel ||
+    !Number.isInteger(formData.currentStock) ||
+    formData.currentStock < 0 ||
+    !Number.isInteger(formData.minimumStockLevel) ||
+    formData.minimumStockLevel < 0 ||
+    !Number.isInteger(formData.maximumStockLevel) ||
+    formData.maximumStockLevel < 0 ||
     imgPreview.value === ''
   ) {
     alert('Please ensure all fields are filled.');
@@ -267,6 +270,7 @@ onMounted(() => {
             </div>
             <input
               v-model="formData.currentStock"
+              @change="console.log(formData.currentStock)"
               type="number"
               placeholder=""
               class="input input-bordered w-full"
