@@ -55,9 +55,17 @@ This is a simple e-commerce website that I created to practice frontend, backend
 
 #### Dashboard Page
 
+<hr />
+
 #### Product Management Page
 
+<p align="center"><img src="frontend/public/images/gif/admin/admin-product.gif" width="650" height="350"></p>
+
+<hr />
+
 #### Order Management Page
+
+<hr />
 
 #### User Management Page
 
