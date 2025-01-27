@@ -15,7 +15,7 @@ This is a simple e-commerce website that I created to practice frontend, backend
 
 ## Manual
 
-### User
+### User Role
 
 #### Homepage
 
@@ -51,7 +51,7 @@ This is a simple e-commerce website that I created to practice frontend, backend
 
 <p align="center"><img src="frontend/public/images/gif/logout.gif" width="650" height="350"></p>
 
-### Admin
+### Admin Role
 
 #### Dashboard Page
 
