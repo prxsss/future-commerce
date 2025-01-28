@@ -43,7 +43,7 @@ export const getProducts = async (req, res) => {
         INNER JOIN 
           categories ON products."categoryId" = categories.id
         ORDER BY 
-          "updatedAt" DESC;
+          "createdAt" DESC;
       `
     );
 
