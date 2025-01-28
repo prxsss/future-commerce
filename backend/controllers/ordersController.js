@@ -63,6 +63,7 @@ export const getOrders = async (req, res) => {
           od."shippingAddress",
           od.total,
           od."createdAt",
+          od.status,
           json_agg(
             json_build_object(
               'orderItemId', oi.id,
