@@ -1,7 +1,16 @@
-from fastapi import FastAPI, HTTPException
+import json
+import re
 import ollama
+from fastapi import FastAPI, HTTPException
+from datetime import datetime
+
 
 app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"msg": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+
 
 @app.get("/api/product")
 async def get_product():
@@ -27,6 +36,13 @@ async def get_product():
 
         response_text = response['message']['content']
 
-        return { "response": response_text  }
+    # Extract JSON content from response using regex
+        json_match = re.search(r'```json\n(.*?)\n```', response_text, re.DOTALL)
+        if json_match:
+            json_data = json_match.group(1)
+            return json.loads(json_data)  # Convert string to JSON and return
+        else:
+            raise ValueError("Failed to extract JSON from the response")
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
