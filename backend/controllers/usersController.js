@@ -27,7 +27,22 @@ const upload = multer({
 
 export const getUsers = async (req, res) => {
   const result = await db.query(
-    'SELECT id, "imgUrl", "firstName", "lastName", email, "isAdmin", "createdAt", "updatedAt", status FROM users;'
+    `
+      SELECT
+        ID,
+        "imgUrl",
+        "firstName",
+        "lastName",
+        EMAIL,
+        "isAdmin",
+        "createdAt",
+        "updatedAt",
+        STATUS
+      FROM
+        USERS
+      ORDER BY
+        "createdAt" DESC;
+    `
   );
 
   res.json({ users: result.rows });
