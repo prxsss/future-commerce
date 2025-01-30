@@ -69,6 +69,8 @@ This is a simple e-commerce website that I created to practice frontend, backend
 
 #### User Management Page
 
+<p align="center"><img src="frontend/public/images/gif/admin/admin-user.gif" width="650" height="350"></p>
+
 ## Tech Stack
 
 - Vue.js
