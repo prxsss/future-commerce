@@ -124,7 +124,6 @@ onMounted(() => {
                 </div>
                 <select
                   v-model="formData.status"
-                  @change="handleRoleChange($event.target.value)"
                   class="select select-bordered"
                 >
                   <option value="active">Active</option>
