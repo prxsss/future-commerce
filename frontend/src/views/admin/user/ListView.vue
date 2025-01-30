@@ -44,7 +44,7 @@ const userStore = useUserStore();
                 >
               </td>
               <td>{{ new Date(user.updatedAt).toLocaleString() }}</td>
-              <td>-</td>
+              <td>{{ user.totalOrders }}</td>
               <td>
                 <RouterLink
                   :to="{ name: 'admin-users-update', params: { id: user.id } }"

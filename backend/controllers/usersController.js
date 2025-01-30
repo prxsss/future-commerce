@@ -29,17 +29,20 @@ export const getUsers = async (req, res) => {
   const result = await db.query(
     `
       SELECT
-        ID,
-        "imgUrl",
+        USERS.ID,
         "firstName",
         "lastName",
         EMAIL,
         "isAdmin",
-        "createdAt",
-        "updatedAt",
-        STATUS
+        USERS."createdAt",
+        USERS."updatedAt",
+        USERS.STATUS,
+        COUNT("orderDetails"."id") AS "totalOrders"
       FROM
         USERS
+        LEFT JOIN "orderDetails" ON USERS.ID = "orderDetails"."userId"
+      GROUP BY
+        "orderDetails"."userId", users.id
       ORDER BY
         "createdAt" DESC;
     `
