@@ -27,7 +27,7 @@ const upload = multer({
 
 export const getUsers = async (req, res) => {
   const result = await db.query(
-    'SELECT id, "imgUrl", "firstName", "lastName", email, "isAdmin", "createdAt", "updatedAt" FROM users;'
+    'SELECT id, "imgUrl", "firstName", "lastName", email, "isAdmin", "createdAt", "updatedAt", status FROM users;'
   );
 
   res.json({ users: result.rows });
@@ -56,28 +56,25 @@ export const updateUser = async (req, res) => {
 
         const { id } = req.params;
         const parsedId = parseInt(id);
-        const { firstName, lastName, email, isAdmin, imgUrl } = req.body;
+        const { firstName, lastName, email, isAdmin, imgUrl, status } =
+          req.body;
         const values = [parsedId, firstName, lastName];
         let query;
 
         if (typeof isAdmin !== 'undefined') {
           // for admin (backoffice)
-          console.log('update from backoffice');
           values.push(isAdmin);
-          query = `
-      UPDATE users SET "firstName"=$2, "lastName"=$3, "isAdmin"=$4`;
+          values.push(status);
+          query = `UPDATE users SET "firstName"=$2, "lastName"=$3, "isAdmin"=$4, status=$5`;
         } else {
           // for user (frontofficecls )
-          console.log('update from frontoffice');
           values.push(email);
-          query = `
-      UPDATE users SET "firstName"=$2, "lastName"=$3, email=$4
-    `;
-        }
+          query = `UPDATE users SET "firstName"=$2, "lastName"=$3, email=$4`;
 
-        if (imgUrl) {
-          query += ', "imgUrl"=$5';
-          values.push(imgUrl);
+          if (imgUrl) {
+            query += ', "imgUrl"=$5';
+            values.push(imgUrl);
+          }
         }
 
         query += ` WHERE id = $1

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, reactive, computed } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
@@ -26,7 +26,6 @@ const handleRoleChange = (role) => {
 };
 
 const handleSubmit = async () => {
-  // console.log(formData);
   try {
     await userStore.updateUser(userId.value, formData);
     await userStore.loadUsers();
@@ -53,103 +52,96 @@ onMounted(() => {
   <AdminLayout>
     <div class="flex h-full flex-col p-14">
       <div>
-        <div class="text-2xl font-semibold">Update User ID: {{ userId }}</div>
-        <div class="divider"></div>
+        <div class="text-2xl font-semibold">Edit User</div>
       </div>
-      <div>
-        <div class="mb-8 flex items-center gap-8">
-          <label class="form-control w-full flex-auto">
-            <div class="label">
-              <span class="label-text">First name</span>
-            </div>
-            <input
-              v-model="formData.firstName"
-              type="text"
-              placeholder="Type here"
-              class="input input-bordered w-full"
-            />
-          </label>
-          <!-- <label class="form-control w-full flex-auto">
-            <div class="label">
-              <span class="label-text">Image (url)</span>
-            </div>
-            <input
-              v-model="formData.imgUrlLarge"
-              type="text"
-              placeholder="Type here"
-              class="input input-bordered w-full"
-            />
-          </label> -->
+      <div class="mt-6 rounded-xl border">
+        <div class="p-6">
+          <h3 class="font-semibold leading-none tracking-tight">
+            User Information
+          </h3>
         </div>
-        <div class="mb-8 flex items-center gap-8">
-          <label class="form-control w-full flex-auto">
-            <div class="label">
-              <span class="label-text">Last name</span>
+        <div class="px-6 pb-6">
+          <div class="space-y-6">
+            <div class="flex items-center gap-8">
+              <label class="form-control w-full flex-auto">
+                <div class="label">
+                  <span class="label-text">First name</span>
+                </div>
+                <input
+                  v-model="formData.firstName"
+                  type="text"
+                  placeholder=""
+                  class="input input-bordered w-full"
+                />
+              </label>
             </div>
-            <input
-              v-model="formData.lastName"
-              type="text"
-              placeholder="Type here"
-              class="input input-bordered w-full"
-            />
-          </label>
-          <!-- <label class="form-control w-full flex-auto">
-            <div class="label">
-              <span class="label-text">Quantity</span>
+            <div class="flex items-center gap-8">
+              <label class="form-control w-full flex-auto">
+                <div class="label">
+                  <span class="label-text">Last name</span>
+                </div>
+                <input
+                  v-model="formData.lastName"
+                  type="text"
+                  placeholder=""
+                  class="input input-bordered w-full"
+                />
+              </label>
             </div>
-            <input
-              v-model="formData.quantity"
-              type="text"
-              placeholder="Type here"
-              class="input input-bordered w-full"
-            />
-          </label> -->
+            <div class="flex items-center gap-8">
+              <label class="form-control w-full flex-auto">
+                <div class="label">
+                  <span class="label-text">Email</span>
+                </div>
+                <input
+                  v-model="formData.email"
+                  type="email"
+                  placeholder=""
+                  class="input input-bordered w-full"
+                  disabled
+                />
+              </label>
+            </div>
+            <div class="flex items-center gap-8">
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="label-text">Role</span>
+                </div>
+                <select
+                  v-model="userRole"
+                  @change="handleRoleChange($event.target.value)"
+                  class="select select-bordered"
+                >
+                  <option>Admin</option>
+                  <option>User</option>
+                </select>
+              </label>
+            </div>
+            <div class="flex items-center gap-8">
+              <label class="form-control w-full">
+                <div class="label">
+                  <span class="label-text">Status</span>
+                </div>
+                <select
+                  v-model="formData.status"
+                  @change="handleRoleChange($event.target.value)"
+                  class="select select-bordered"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </label>
+            </div>
+          </div>
         </div>
-        <div class="mb-8 flex items-center gap-8">
-          <!-- <label class="form-control w-full flex-auto">
-            <div class="label">
-              <span class="label-text">Role</span>
-            </div>
-            <input
-              v-model="formData.isAdmin"
-              type="text"
-              placeholder="Type here"
-              class="input input-bordered w-full"
-            />
-          </label> -->
-          <label class="form-control w-full">
-            <div class="label">
-              <span class="label-text">Role</span>
-            </div>
-            <select
-              v-model="userRole"
-              @change="handleRoleChange($event.target.value)"
-              class="select select-bordered"
-            >
-              <!-- <option disabled selected>Pick one</option> -->
-              <option>Admin</option>
-              <option>User</option>
-            </select>
-          </label>
-          <!-- <label class="form-control w-full flex-auto">
-            <div class="label">
-              <span class="label-text">Description</span>
-            </div>
-            <textarea
-              v-model="formData.description"
-              class="textarea textarea-bordered h-24"
-              placeholder="Bio"
-            ></textarea>
-          </label> -->
+        <div class="flex flex-auto items-end justify-end gap-4 px-6 pb-6">
+          <RouterLink :to="{ name: 'admin-users-list' }" class="btn px-6"
+            >Back</RouterLink
+          >
+          <button @click="handleSubmit()" class="btn btn-primary px-6">
+            Update
+          </button>
         </div>
-      </div>
-      <div class="flex flex-auto items-end justify-end gap-4">
-        <RouterLink :to="{ name: 'admin-users-list' }" class="btn px-6"
-          >Back</RouterLink
-        >
-        <button @click="handleSubmit()" class="btn btn-primary px-6">
-          Update
-        </button>
       </div>
     </div>
   </AdminLayout>
